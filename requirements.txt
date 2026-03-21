@@ -1,0 +1,10 @@
+Pillow
+pydub
+moviepy
+python-docx
+PyPDF2
+pandas
+openpyxl
+reportlab
+tkinterdnd2
+pdf2image

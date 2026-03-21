@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Free File Converter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827;
+            --panel-hover: #1e293b;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .container {
+            background: var(--panel);
+            padding: 30px;
+            border-radius: 16px;
+            width: min(420px, 100%);
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: clamp(20px, 4.5vw, 26px);
+        }
+
+        p {
+            font-size: clamp(13px, 3.4vw, 15px);
+            color: var(--muted);
+            margin-bottom: 32px;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 40px 16px;
+            min-height: 140px;
+            margin-bottom: 32px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .drop-zone:hover {
+            border-color: var(--accent);
+            background: var(--panel-hover);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+        }
+
+        select {
+            background: #1f2937;
+            color: white;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+        }
+
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-top-color: white;
+            border-radius: 50%;
+            display: none;
+            margin-left: 8px;
+            vertical-align: -3px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .file-name {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 12px;
+            margin-bottom: 24px;
+            word-break: break-word;
+        }
+
+        .progress {
+            margin-top: 15px;
+            height: 6px;
+            background: #1f2937;
+            border-radius: 5px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .status {
+            margin-top: 14px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            display: none;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .status.success {
+            display: block;
+            background: #0f2a1b;
+            color: #86efac;
+            border: 1px solid #166534;
+        }
+
+        .status.error {
+            display: block;
+            background: #2a1212;
+            color: #fca5a5;
+            border: 1px solid #7f1d1d;
+        }
+
+        .trust {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid #1f2937;
+            font-size: 12px;
+            color: var(--muted);
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .trust strong {
+            color: var(--text);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .container {
+                padding: 22px;
+                border-radius: 14px;
+            }
+
+            .drop-zone {
+                padding: 28px 12px;
+                min-height: 120px;
+                margin-bottom: 24px;
+            }
+
+            select, button {
+                font-size: 15px;
+                padding: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Convert Your Files Fast & Easy</h1>
+    <p>Convert images, audio, video, and documents instantly</p>
+
+    <form id="form">
+        <label class="drop-zone" id="drop-zone">
+            Click or Drag & Drop your File Here
+            <input type="file" name="file" id="file-input" required
+                   accept=".txt,.csv,.png,.jpg,.jpeg,.webp,.mp3,.wav,.ogg,.mp4,.avi,.mov">
+        </label>
+
+        <div class="file-name" id="file-name">No file selected</div>
+
+        <select name="format">
+            <option value="jpg">JPG</option>
+            <option value="png">PNG</option>
+            <option value="mp3">MP3</option>
+            <option value="wav">WAV</option>
+            <option value="mp4">MP4</option>
+            <option value="avi">AVI</option>
+            <option value="pdf">PDF</option>
+            <option value="xlsx">XLSX</option>
+        </select>
+
+        <button type="submit" id="submit-btn">
+            Convert
+            <span class="spinner" id="spinner"></span>
+        </button>
+    </form>
+
+    <div class="progress" id="progress">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div class="trust">
+        <div><strong>Privacy:</strong> Files are processed on this server and removed after conversion.</div>
+        <div><strong>Safety:</strong> Only common formats are accepted, max 25MB per file.</div>
+        <div><strong>Supported:</strong> Images (JPG/PNG/WEBP), Audio (MP3/WAV/OGG), Video (MP4/AVI/MOV), Docs (TXT/CSV/PDF/XLSX).</div>
+    </div>
+</div>
+
+<script>
+const fileInput = document.getElementById("file-input");
+const fileName = document.getElementById("file-name");
+const dropZone = document.getElementById("drop-zone");
+const progress = document.getElementById("progress");
+const progressBar = document.getElementById("progress-bar");
+const statusEl = document.getElementById("status");
+const submitBtn = document.getElementById("submit-btn");
+const spinner = document.getElementById("spinner");
+
+fileInput.addEventListener("change", () => {
+    fileName.textContent = fileInput.files[0]?.name || "No file selected";
+});
+
+// Drag & drop
+dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = "#3b82f6";
+});
+
+dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    fileInput.files = e.dataTransfer.files;
+    fileName.textContent = fileInput.files[0]?.name;
+});
+
+document.getElementById("form").onsubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    statusEl.className = "status";
+    statusEl.textContent = "";
+    statusEl.style.display = "none";
+
+    submitBtn.disabled = true;
+    spinner.style.display = "inline-block";
+
+    progress.style.display = "block";
+    progressBar.style.width = "30%";
+
+    try {
+        const response = await fetch("/convert", {
+            method: "POST",
+            body: formData
+        });
+
+        progressBar.style.width = "80%";
+
+        if (!response.ok) {
+            let message = "Conversion failed.";
+            try {
+                const data = await response.json();
+                if (data?.error) {
+                    message = data.error;
+                }
+            } catch (_) {
+                // ignore parse errors
+            }
+            throw new Error(message);
+        }
+
+        const blob = await response.blob();
+
+        progressBar.style.width = "100%";
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "converted_file";
+        a.click();
+
+        statusEl.textContent = "Conversion complete. Your file is downloading.";
+        statusEl.className = "status success";
+    } finally {
+        setTimeout(() => {
+            progressBar.style.width = "0%";
+            progress.style.display = "none";
+        }, 1000);
+
+        submitBtn.disabled = false;
+        spinner.style.display = "none";
+    }
+};
+</script>
+
+</body>
+</html>
