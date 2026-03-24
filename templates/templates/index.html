@@ -2,19 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Free File Converter</title>
+    <title>Image Converter & Resizer</title>
+    <meta name="description" content="Simple, trustworthy image conversion and resizing. Convert to WebP, JPG, or PNG with privacy-first processing.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         :root {
-            --bg: #0f172a;
-            --panel: #111827;
-            --panel-hover: #1e293b;
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --border: #334155;
+            --bg: #f5f7fb;
+            --panel: #ffffff;
+            --panel-hover: #f1f5f9;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --border: #e2e8f0;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
         }
 
         * {
@@ -24,11 +26,10 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: var(--bg);
+            background: radial-gradient(1200px 600px at 10% -10%, #e0f2fe 0, rgba(224, 242, 254, 0) 60%),
+                        radial-gradient(1200px 600px at 110% 0%, #e2e8f0 0, rgba(226, 232, 240, 0) 55%),
+                        var(--bg);
             color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             padding: 24px;
         }
@@ -37,20 +38,24 @@
             background: var(--panel);
             padding: 30px;
             border-radius: 16px;
-            width: min(420px, 100%);
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: min(900px, 100%);
+            text-align: left;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin: 0 auto;
         }
 
         h1 {
             margin-bottom: 10px;
             font-size: clamp(20px, 4.5vw, 26px);
+            text-align: center;
         }
 
         p {
             font-size: clamp(13px, 3.4vw, 15px);
             color: var(--muted);
             margin-bottom: 32px;
+            text-align: center;
         }
 
         .drop-zone {
@@ -77,7 +82,7 @@
             display: none;
         }
 
-        select, button {
+        select, button, input[type="number"] {
             width: 100%;
             padding: 12px;
             margin-top: 10px;
@@ -86,9 +91,10 @@
             font-size: 14px;
         }
 
-        select {
-            background: #1f2937;
-            color: white;
+        select, input[type="number"] {
+            background: #f8fafc;
+            color: var(--text);
+            border: 1px solid var(--border);
         }
 
         button {
@@ -103,7 +109,7 @@
         }
 
         button:disabled {
-            background: #475569;
+            background: #94a3b8;
             cursor: not-allowed;
         }
 
@@ -129,12 +135,13 @@
             margin-top: 12px;
             margin-bottom: 24px;
             word-break: break-word;
+            text-align: center;
         }
 
         .progress {
             margin-top: 15px;
             height: 6px;
-            background: #1f2937;
+            background: #e2e8f0;
             border-radius: 5px;
             overflow: hidden;
             display: none;
@@ -159,25 +166,25 @@
 
         .status.success {
             display: block;
-            background: #0f2a1b;
-            color: #86efac;
-            border: 1px solid #166534;
+            background: #ecfdf3;
+            color: #166534;
+            border: 1px solid #86efac;
         }
 
         .status.error {
             display: block;
-            background: #2a1212;
-            color: #fca5a5;
-            border: 1px solid #7f1d1d;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
         }
 
         .trust {
             margin-top: 18px;
             padding-top: 14px;
-            border-top: 1px solid #1f2937;
+            border-top: 1px solid var(--border);
             font-size: 12px;
             color: var(--muted);
-            text-align: left;
+            text-align: center;
             line-height: 1.5;
         }
 
@@ -201,9 +208,13 @@
                 margin-bottom: 24px;
             }
 
-            select, button {
+            select, button, input[type="number"] {
                 font-size: 15px;
                 padding: 13px;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -211,14 +222,14 @@
 <body>
 
 <div class="container">
-    <h1>Convert Your Files Fast & Easy</h1>
-    <p>Convert images, audio, video, and documents instantly</p>
+    <h1>Simple Image Converter & Resizer</h1>
+    <p>Convert to WebP/JPG/PNG and resize images with a privacy-first, no-nonsense workflow.</p>
 
     <form id="form">
         <label class="drop-zone" id="drop-zone">
-            Click or Drag & Drop your File Here
+            Click or Drag & Drop your Image Here
             <input type="file" name="file" id="file-input" required
-                   accept=".txt,.csv,.png,.jpg,.jpeg,.webp,.mp3,.wav,.ogg,.mp4,.avi,.mov">
+                   accept=".png,.jpg,.jpeg,.webp">
         </label>
 
         <div class="file-name" id="file-name">No file selected</div>
@@ -226,13 +237,15 @@
         <select name="format">
             <option value="jpg">JPG</option>
             <option value="png">PNG</option>
-            <option value="mp3">MP3</option>
-            <option value="wav">WAV</option>
-            <option value="mp4">MP4</option>
-            <option value="avi">AVI</option>
-            <option value="pdf">PDF</option>
-            <option value="xlsx">XLSX</option>
+            <option value="webp">WEBP</option>
         </select>
+
+        <div class="input-grid">
+            <input type="number" name="width" min="1" placeholder="Width (px)">
+            <input type="number" name="height" min="1" placeholder="Height (px)">
+            <input type="number" name="quality" min="1" max="100" value="85" placeholder="Quality 1-100">
+        </div>
+        <div class="hint">Leave width or height blank to keep aspect ratio. Default quality is 85.</div>
 
         <button type="submit" id="submit-btn">
             Convert
@@ -248,8 +261,8 @@
 
     <div class="trust">
         <div><strong>Privacy:</strong> Files are processed on this server and removed after conversion.</div>
-        <div><strong>Safety:</strong> Only common formats are accepted, max 25MB per file.</div>
-        <div><strong>Supported:</strong> Images (JPG/PNG/WEBP), Audio (MP3/WAV/OGG), Video (MP4/AVI/MOV), Docs (TXT/CSV/PDF/XLSX).</div>
+        <div><strong>Safety:</strong> Only image files are accepted, max 25MB per file.</div>
+        <div><strong>Supported:</strong> JPG, PNG, WEBP with optional resizing and quality control.</div>
     </div>
 </div>
 

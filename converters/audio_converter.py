@@ -2,12 +2,15 @@ from utils import get_output_path
 from pydub import AudioSegment
 
 def convert_audio(file_path, output_format, progress_callback=None):
+    # Force pydub to use ffmpeg
+    AudioSegment.converter = "ffmpeg"
+
     audio = AudioSegment.from_file(file_path)
 
     output = get_output_path(file_path, output_format)
 
     if progress_callback:
-        progress_callback(0.3)
+        progress_callback(0.5)
 
     audio.export(output, format=output_format)
 

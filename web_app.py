@@ -3,29 +3,15 @@ import os
 from werkzeug.utils import secure_filename
 import uuid
 
-from converters.document_converter import convert_document
 from converters.image_converter import convert_image
-from converters.audio_converter import convert_audio
-from converters.video_converter import convert_video
 
 app = Flask(__name__, template_folder="templates/templates")
 
 UPLOAD_FOLDER = "uploads"
 MAX_UPLOAD_MB = 25
 
-ALLOWED_INPUT_EXTENSIONS = {
-    ".txt", ".csv",
-    ".png", ".jpg", ".jpeg", ".webp",
-    ".mp3", ".wav", ".ogg",
-    ".mp4", ".avi", ".mov",
-}
-
-ALLOWED_OUTPUT_BY_TYPE = {
-    "document": {"pdf", "xlsx", "txt", "csv"},
-    "image": {"jpg", "png", "webp"},
-    "audio": {"mp3", "wav", "ogg"},
-    "video": {"mp4", "avi", "mov"},
-}
+ALLOWED_INPUT_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+ALLOWED_OUTPUT_FORMATS = {"jpg", "png", "webp"}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_MB * 1024 * 1024
@@ -56,20 +42,27 @@ def convert():
     if ext not in ALLOWED_INPUT_EXTENSIONS:
         return jsonify({"error": "Unsupported input file type."}), 400
 
-    # map file type to allowed outputs
-    if ext in {".txt", ".csv"}:
-        file_type = "document"
-    elif ext in {".png", ".jpg", ".jpeg", ".webp"}:
-        file_type = "image"
-    elif ext in {".mp3", ".wav", ".ogg"}:
-        file_type = "audio"
-    elif ext in {".mp4", ".avi", ".mov"}:
-        file_type = "video"
-    else:
-        return jsonify({"error": "Unsupported input file type."}), 400
+    if output_format not in ALLOWED_OUTPUT_FORMATS:
+        return jsonify({"error": "Unsupported output format."}), 400
 
-    if output_format not in ALLOWED_OUTPUT_BY_TYPE[file_type]:
-        return jsonify({"error": "Unsupported output format for this file type."}), 400
+    width = request.form.get("width")
+    height = request.form.get("height")
+    quality = request.form.get("quality")
+
+    def _as_positive_int(value):
+        if value is None:
+            return None
+        value = str(value).strip()
+        if not value:
+            return None
+        try:
+            parsed = int(value)
+        except ValueError:
+            return None
+        return parsed if parsed > 0 else None
+
+    width = _as_positive_int(width)
+    height = _as_positive_int(height)
 
     unique_id = uuid.uuid4().hex[:12]
     name_root = os.path.splitext(filename)[0]
@@ -82,22 +75,23 @@ def convert():
 
     output_path = None
     try:
-        if file_type == "document":
-            convert_document(input_path, output_format)
-
-        elif file_type == "image":
-            convert_image(input_path, output_format)
-
-        elif file_type == "audio":
-            convert_audio(input_path, output_format)
-
-        elif file_type == "video":
-            convert_video(input_path, output_format)
+        convert_image(
+            input_path,
+            output_format,
+            width=width,
+            height=height,
+            quality=quality,
+        )
 
         # assume same filename but new extension
         output_path = input_path.rsplit(".", 1)[0] + "." + output_format
 
-        return send_file(output_path, as_attachment=True, download_name=f"{safe_root}.{output_format}")
+        if width or height:
+            size_tag = f"_{width or ''}x{height or ''}".rstrip("x")
+        else:
+            size_tag = ""
+        download_name = f"{safe_root}{size_tag}.{output_format}"
+        return send_file(output_path, as_attachment=True, download_name=download_name)
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

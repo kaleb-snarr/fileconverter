@@ -1,16 +1,5 @@
 gunicorn
 flask
-Pillow
-pydub
-moviepy
-python-docx
-PyPDF2
-pandas
-openpyxl
-reportlab
-tkinterdnd2
-pdf2image
 flask-cors
-pydub
-moviepy
+Pillow
 werkzeug
