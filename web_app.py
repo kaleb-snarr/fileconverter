@@ -18,6 +18,11 @@ app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_MB * 1024 * 1024
 
 @app.route("/")
 def home():
+    return render_template("landing.html")
+
+
+@app.route("/converter")
+def converter():
     return render_template("index.html")
 
 

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>snarrtools</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+        background: #0b1220;
+        color: white;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 0 20px;
+    }
+
+    /* NAV */
+    .nav {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 0;
+        align-items: center;
+    }
+
+    .logo {
+        font-weight: 600;
+        font-size: 18px;
+        letter-spacing: 0.5px;
+    }
+
+    .nav a {
+        margin-left: 20px;
+        text-decoration: none;
+        color: #cbd5f5;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .nav a:hover {
+        color: white;
+    }
+
+    /* HERO */
+    .hero {
+        text-align: center;
+        padding: 100px 0 40px;
+    }
+
+    .hero h1 {
+        font-size: 52px;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        animation: fadeUp 0.8s ease forwards;
+    }
+
+    .hero p {
+        font-size: 18px;
+        color: #94a3b8;
+        margin-bottom: 30px;
+        animation: fadeUp 1s ease forwards;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 14px 28px;
+        background: #3b82f6;
+        border-radius: 10px;
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: 0.3s;
+        animation: fadeUp 1.2s ease forwards;
+    }
+
+    .btn:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+    }
+
+    /* TRUST BAR */
+    .trust {
+        text-align: center;
+        margin-top: 12px;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    /* FEATURES */
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        padding: 40px 0 60px;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.04);
+        padding: 24px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.05);
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.06);
+    }
+
+    .card h3 {
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        color: #94a3b8;
+        font-size: 14px;
+    }
+
+    /* FINAL CTA */
+    .cta {
+        text-align: center;
+        padding: 80px 0;
+    }
+
+    .cta h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    /* FOOTER */
+    .footer {
+        text-align: center;
+        padding: 40px 0;
+        font-size: 12px;
+        color: #64748b;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* FADE IN ON LOAD */
+    .fade-in {
+        opacity: 0;
+        animation: fadeUp 0.8s ease forwards;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- NAV -->
+    <div class="nav">
+        <div class="logo">snarrtools</div>
+        <div>
+            <a href="/converter">Image Converter</a>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1>Convert files instantly</h1>
+        <p>Fast, secure, and simple file conversion for images.</p>
+        <a href="/converter" class="btn">Start Converting</a>
+        <div class="trust">No signup required • Files are not stored</div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="features">
+
+        <div class="card fade-in">
+            <h3>Fast</h3>
+            <p>Optimized processing delivers conversions in seconds.</p>
+        </div>
+
+        <div class="card fade-in">
+            <h3>Secure</h3>
+            <p>Your files are processed safely and never permanently stored.</p>
+        </div>
+
+        <div class="card fade-in">
+            <h3>Multi-format</h3>
+            <p>Support for images, audio, video, and document conversions.</p>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        © 2026 snarrtools. Built for speed and simplicity.
+    </div>
+
+</div>
+
+</body>
+</html>
