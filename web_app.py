@@ -1,7 +1,8 @@
-from flask import Flask, request, send_file, jsonify, render_template, abort
+from flask import Flask, request, send_file, jsonify, render_template, abort, Response, redirect, url_for
 import os
 from werkzeug.utils import secure_filename
 import uuid
+import datetime
 
 from converters.image_converter import convert_image
 
@@ -16,15 +17,55 @@ ALLOWED_OUTPUT_FORMATS = {"jpg", "png", "webp"}
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_MB * 1024 * 1024
 
+TEMPLATE_LASTMOD = {
+    "home": os.path.join("templates", "templates", "landing.html"),
+    "converter": os.path.join("templates", "templates", "index.html"),
+}
+
+SEO_PAGES = [
+    # Core pages
+    ("/", 1.0),
+
+    # Tool pages (high priority)
+    ("/jpeg-to-png", 0.9),
+]
+
 @app.route("/")
 def home():
     return render_template("landing.html")
 
 
-@app.route("/converter")
+@app.route("/jpeg-to-png")
 def converter():
     return render_template("index.html")
 
+@app.route("/converter")
+def converter_redirect():
+    return redirect(url_for("converter"), code=301)
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    from flask import request, Response
+    import datetime
+
+    base = request.url_root.rstrip("/")
+
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>']
+    lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+
+    today = datetime.date.today().isoformat()
+
+    for path, priority in SEO_PAGES:
+        lines.append("  <url>")
+        lines.append(f"    <loc>{base}{path}</loc>")
+        lines.append(f"    <lastmod>{today}</lastmod>")
+        lines.append(f"    <priority>{priority}</priority>")
+        lines.append("  </url>")
+
+    lines.append("</urlset>")
+
+    return Response("\n".join(lines), mimetype="application/xml")
 
 @app.route("/convert", methods=["POST"])
 def convert():
