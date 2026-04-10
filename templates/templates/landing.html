@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>snarrtools | Online Tools</title>
+<title>Free Online Tools – PDF, Image & Text Utilities | snarrtools</title>
+<meta name="description" content="Free online tools to convert images, compress PDFs, and count words. Fast, private, and simple file tools from snarrtools.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/snarrtoolsfavicon.png">
 
 <style>
     * {
@@ -14,7 +16,9 @@
     }
 
     body {
-        background: #0b1220;
+        background: radial-gradient(1200px 700px at 0% -10%, rgba(59,130,246,0.22), rgba(11,18,32,0) 60%),
+                    radial-gradient(900px 500px at 100% 0%, rgba(14,165,233,0.18), rgba(11,18,32,0) 55%),
+                    #0b1220;
         color: white;
         overflow-x: hidden;
     }
@@ -88,6 +92,17 @@
         transform: translateY(-2px);
     }
 
+    .btn.secondary {
+        background: rgba(255,255,255,0.08);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.2);
+        margin-left: 10px;
+    }
+
+    .btn.secondary:hover {
+        background: rgba(255,255,255,0.14);
+    }
+
     /* TRUST BAR */
     .trust {
         text-align: center;
@@ -126,6 +141,112 @@
         font-size: 14px;
     }
 
+    .tools {
+        padding: 40px 0 60px;
+    }
+
+    .tools h2 {
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    .tools p {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 22px;
+    }
+
+    .tool-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+    }
+
+    .tool-card {
+        background: rgba(255,255,255,0.05);
+        padding: 22px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.08);
+        text-decoration: none;
+        color: white;
+        transition: 0.3s;
+    }
+
+    .tool-card:hover {
+        transform: translateY(-4px);
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(255,255,255,0.2);
+    }
+
+    .tool-card .tag {
+        display: inline-block;
+        font-size: 11px;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        color: #93c5fd;
+        margin-bottom: 8px;
+    }
+
+    .tool-card h3 {
+        margin: 0 0 8px 0;
+        font-size: 20px;
+    }
+
+    .tool-card p {
+        color: #cbd5f5;
+        font-size: 14px;
+        margin: 0 0 12px 0;
+    }
+
+    .tool-card .cta {
+        font-size: 13px;
+        color: #93c5fd;
+    }
+
+    .seo {
+        padding: 20px 0 40px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+    }
+
+    .seo h3 {
+        margin-bottom: 8px;
+    }
+
+    .seo p {
+        color: #94a3b8;
+        font-size: 14px;
+    }
+
+    .faq {
+        padding: 20px 0 60px;
+    }
+
+    .faq h2 {
+        text-align: center;
+        margin-bottom: 18px;
+    }
+
+    .faq-item {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+
+    .faq-item h4 {
+        margin: 0 0 6px 0;
+    }
+
+    .faq-item p {
+        margin: 0;
+        color: #cbd5f5;
+        font-size: 14px;
+    }
+
     /* FINAL CTA */
     .cta {
         text-align: center;
@@ -157,6 +278,55 @@
         }
     }
 
+
+    @media (max-width: 560px) {
+        .nav {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .nav a {
+            margin-left: 0;
+            margin-right: 12px;
+        }
+
+        .hero {
+            padding: 80px 0 30px;
+            text-align: left;
+        }
+
+        .hero h1,
+        .hero p {
+            text-align: left;
+        }
+
+        .btn,
+        .btn.secondary {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-left: 0;
+        }
+
+        .btn.secondary {
+            margin-top: 10px;
+        }
+
+        .tools h2,
+        .tools p,
+        .features,
+        .seo,
+        .faq h2 {
+            text-align: left;
+        }
+
+        .tool-grid,
+        .features,
+        .seo {
+            grid-template-columns: 1fr;
+        }
+    }
     /* FADE IN ON LOAD */
     .fade-in {
         opacity: 0;
@@ -175,15 +345,43 @@
         <div class="logo">snarrtools | Online Tools</div>
         <div>
             <a href="/jpeg-to-png">Image Converter</a>
+            <a href="/pdf-compressor">PDF Compressor</a>
+            <a href="/word-counter">Word Counter</a>
         </div>
     </div>
 
     <!-- HERO -->
     <div class="hero">
-        <h1>Convert jpeg images to png instantly</h1>
-        <p>Fast, secure, and simple file conversion for images.</p>
-        <a href="/jpeg-to-png" class="btn">Start Converting for free</a>
-        <div class="trust">No signup required • Files are not stored</div>
+        <h1>Fast, Free, and Secure tools for everyday use.</h1>
+        <p>Free online tools to convert images, compress PDFs, and count words. Privacy-first, no signup.</p>
+        <a href="/jpeg-to-png" class="btn">Convert Images</a>
+        <a href="/pdf-compressor" class="btn secondary">Compress PDFs</a>
+        <div class="trust">No signup required - Files are not stored</div>
+    </div>
+
+    <div class="tools">
+        <h2>Choose a tool</h2>
+        <p>Jump straight into the tool you need, no account required.</p>
+        <div class="tool-grid">
+            <a class="tool-card" href="/jpeg-to-png">
+                <div class="tag">Images</div>
+                <h3>Image Converter</h3>
+                <p>Convert JPG, PNG, and WebP with optional resizing and quality control.</p>
+                <div class="cta">Open Image Converter -></div>
+            </a>
+            <a class="tool-card" href="/pdf-compressor">
+                <div class="tag">PDF</div>
+                <h3>PDF Compressor</h3>
+                <p>Reduce PDF file size for email or upload without losing structure.</p>
+                <div class="cta">Open PDF Compressor -></div>
+            </a>
+            <a class="tool-card" href="/word-counter">
+                <div class="tag">Writing</div>
+                <h3>Word Counter</h3>
+                <p>Count words, characters, sentences, and reading time instantly.</p>
+                <div class="cta">Open Word Counter -></div>
+            </a>
+        </div>
     </div>
 
     <!-- FEATURES -->
@@ -191,19 +389,50 @@
 
         <div class="card fade-in">
             <h3>Fast</h3>
-            <p>Optimized processing delivers conversions in seconds.</p>
+            <p>Optimized processing delivers results in seconds.</p>
         </div>
 
         <div class="card fade-in">
-            <h3>Secure</h3>
-            <p>Your files are processed safely and never permanently stored.</p>
+            <h3>Private</h3>
+            <p>Your files stay on this server and are deleted after processing.</p>
         </div>
 
         <div class="card fade-in">
-            <h3>Resize</h3>
-            <p>Optional Resize & quality feature</p>
+            <h3>Simple</h3>
+            <p>Drag, drop, and download with no signup required.</p>
         </div>
 
+    </div>
+
+    <div class="seo">
+        <div>
+            <h3>Online image converter</h3>
+            <p>Convert JPG to PNG, PNG to WebP, or JPG to WebP with optional resizing.</p>
+        </div>
+        <div>
+            <h3>PDF compressor online</h3>
+            <p>Compress PDFs for faster sharing and smoother uploads.</p>
+        </div>
+        <div>
+            <h3>Free word counter</h3>
+            <p>Track words, characters, and reading time in a clean editor.</p>
+        </div>
+    </div>
+
+    <div class="faq">
+        <h2>FAQ</h2>
+        <div class="faq-item">
+            <h4>Are my files stored-</h4>
+            <p>No. Files are processed and removed after conversion or compression.</p>
+        </div>
+        <div class="faq-item">
+            <h4>Do I need an account-</h4>
+            <p>No account or signup is required.</p>
+        </div>
+        <div class="faq-item">
+            <h4>What file types are supported-</h4>
+            <p>JPG, PNG, and WebP for images, plus PDF for compression.</p>
+        </div>
     </div>
 
     <!-- FOOTER -->

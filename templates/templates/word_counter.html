@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Free Word Counter Online – Count Words & Characters | snarrtools</title>
+    <meta name="description" content="Count words, characters, sentences, and paragraphs instantly. Privacy-first word counter in your browser.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/snarrtoolsfavicon.png">
+
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --panel: #ffffff;
+            --panel-hover: #f1f5f9;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --border: #e2e8f0;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: radial-gradient(1200px 600px at 10% -10%, #e0f2fe 0, rgba(224, 242, 254, 0) 60%),
+                        radial-gradient(1200px 600px at 110% 0%, #e2e8f0 0, rgba(226, 232, 240, 0) 55%),
+                        var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .container {
+            background: var(--panel);
+            padding: 30px;
+            border-radius: 16px;
+            width: min(900px, 100%);
+            text-align: left;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: clamp(20px, 4.5vw, 26px);
+            text-align: center;
+        }
+
+        p {
+            font-size: clamp(13px, 3.4vw, 15px);
+            color: var(--muted);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 220px;
+            resize: vertical;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .stat {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            background: #f8fafc;
+        }
+
+        .stat .label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .stat .value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+        }
+
+        .secondary {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .secondary:hover {
+            background: #cbd5f5;
+        }
+
+        .trust {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .trust strong {
+            color: var(--text);
+        }
+
+        .top-nav {
+            margin-bottom: 18px;
+        }
+
+        .home-link {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
+        .related-tools {
+            margin-top: 26px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .related-tools h2 {
+            font-size: 16px;
+            margin: 0 0 12px 0;
+            text-align: center;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .tool-card {
+            display: block;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            color: var(--text);
+            border-radius: 12px;
+            padding: 12px;
+            transition: 0.2s;
+        }
+
+        .tool-card:hover {
+            border-color: var(--accent);
+            background: var(--panel-hover);
+            transform: translateY(-2px);
+        }
+
+        .tool-card .title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .tool-card .desc {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .container {
+                padding: 22px;
+                border-radius: 14px;
+            }
+
+            textarea {
+                font-size: 15px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-nav">
+        <a href="/" class="home-link">← Back to home</a>
+    </div>
+    <h1>Word Counter Tool</h1>
+    <p>Count words, characters, sentences, and paragraphs instantly.</p>
+
+    <textarea id="text-input" placeholder="Paste or type your text here..."></textarea>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="label">Words</div>
+            <div class="value" id="words">0</div>
+        </div>
+        <div class="stat">
+            <div class="label">Characters</div>
+            <div class="value" id="chars">0</div>
+        </div>
+        <div class="stat">
+            <div class="label">Characters (no spaces)</div>
+            <div class="value" id="chars-nospace">0</div>
+        </div>
+        <div class="stat">
+            <div class="label">Sentences</div>
+            <div class="value" id="sentences">0</div>
+        </div>
+        <div class="stat">
+            <div class="label">Paragraphs</div>
+            <div class="value" id="paragraphs">0</div>
+        </div>
+        <div class="stat">
+            <div class="label">Reading time</div>
+            <div class="value" id="reading">0 min</div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button type="button" id="copy-btn">Copy text</button>
+        <button type="button" class="secondary" id="clear-btn">Clear</button>
+    </div>
+
+    <div class="trust">
+        <div><strong>Privacy:</strong> Everything runs locally in your browser.</div>
+        <div><strong>Fast:</strong> Counts update as you type.</div>
+    </div>
+
+    <div class="related-tools">
+        <h2>Related tools</h2>
+        <div class="tool-grid">
+            <a class="tool-card" href="/jpeg-to-png">
+                <div class="title">Image Converter</div>
+                <div class="desc">Convert and resize images fast.</div>
+            </a>
+            <a class="tool-card" href="/pdf-compressor">
+                <div class="title">PDF Compressor</div>
+                <div class="desc">Shrink PDFs with a quick upload.</div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+const input = document.getElementById("text-input");
+const wordsEl = document.getElementById("words");
+const charsEl = document.getElementById("chars");
+const charsNoSpaceEl = document.getElementById("chars-nospace");
+const sentencesEl = document.getElementById("sentences");
+const paragraphsEl = document.getElementById("paragraphs");
+const readingEl = document.getElementById("reading");
+
+const copyBtn = document.getElementById("copy-btn");
+const clearBtn = document.getElementById("clear-btn");
+
+function countWords(text) {
+    const cleaned = text.trim();
+    if (!cleaned) return 0;
+    return cleaned.split(/\s+/).filter(Boolean).length;
+}
+
+function countSentences(text) {
+    const cleaned = text.trim();
+    if (!cleaned) return 0;
+    const matches = cleaned.match(/[^.!?]+[.!?]+|[^.!?]+$/g);
+    return matches ? matches.length : 0;
+}
+
+function countParagraphs(text) {
+    const cleaned = text.trim();
+    if (!cleaned) return 0;
+    return cleaned.split(/\n\s*\n/).filter(p => p.trim().length > 0).length;
+}
+
+function updateStats() {
+    const text = input.value;
+    const words = countWords(text);
+    const chars = text.length;
+    const charsNoSpace = text.replace(/\s/g, "").length;
+    const sentences = countSentences(text);
+    const paragraphs = countParagraphs(text);
+    const minutes = Math.max(1, Math.ceil(words / 200));
+
+    wordsEl.textContent = words.toString();
+    charsEl.textContent = chars.toString();
+    charsNoSpaceEl.textContent = charsNoSpace.toString();
+    sentencesEl.textContent = sentences.toString();
+    paragraphsEl.textContent = paragraphs.toString();
+    readingEl.textContent = words === 0 ? "0 min" : `${minutes} min`;
+}
+
+input.addEventListener("input", updateStats);
+
+copyBtn.addEventListener("click", async () => {
+    try {
+        await navigator.clipboard.writeText(input.value);
+        copyBtn.textContent = "Copied";
+        setTimeout(() => (copyBtn.textContent = "Copy text"), 1200);
+    } catch (_) {
+        copyBtn.textContent = "Copy failed";
+        setTimeout(() => (copyBtn.textContent = "Copy text"), 1200);
+    }
+});
+
+clearBtn.addEventListener("click", () => {
+    input.value = "";
+    updateStats();
+    input.focus();
+});
+
+updateStats();
+</script>
+
+</body>
+</html>
