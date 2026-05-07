@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>JPG to PNG Converter Online – Free Image Tool | snarrtools</title>
-    <meta name="description" content="Simple, trustworthy image conversion and resizing. Convert to WebP, JPG, or PNG with privacy-first processing.">
+    <title>Fast Video Compressor for Texting (MMS) | snarrtools</title>
+    <meta name="description" content="Compress videos to a smaller MP4 for texting. Privacy-first processing: upload, compress, download.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index,follow">
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
     <link rel="icon" type="image/png" href="/snarrtoolsfavicon.png">
 
     <style>
-
         :root {
             --bg: #f5f7fb;
             --panel: #ffffff;
@@ -21,9 +22,7 @@
             --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -47,6 +46,22 @@
             margin: 0 auto;
         }
 
+        .top-nav {
+            margin-bottom: 18px;
+        }
+
+        .home-link {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
         h1 {
             margin-bottom: 10px;
             font-size: clamp(20px, 4.5vw, 26px);
@@ -65,7 +80,7 @@
             border-radius: 12px;
             padding: 40px 16px;
             min-height: 140px;
-            margin-bottom: 32px;
+            margin-bottom: 18px;
             cursor: pointer;
             transition: 0.3s;
             display: flex;
@@ -80,11 +95,16 @@
             background: var(--panel-hover);
         }
 
-        input[type="file"] {
-            display: none;
+        input[type="file"] { display: none; }
+
+        .file-name {
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 10px;
         }
 
-        select, button, input[type="number"] {
+        select, button {
             width: 100%;
             padding: 12px;
             margin-top: 10px;
@@ -93,10 +113,23 @@
             font-size: 14px;
         }
 
-        select, input[type="number"] {
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        select {
             background: #f8fafc;
             color: var(--text);
             border: 1px solid var(--border);
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 8px;
+            line-height: 1.4;
         }
 
         button {
@@ -104,83 +137,55 @@
             color: white;
             cursor: pointer;
             transition: 0.2s;
+            font-weight: 700;
+            border: 1px solid var(--accent);
         }
 
-        button:hover {
-            background: var(--accent-hover);
-        }
-
-        button:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-        }
+        button:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
 
         .spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            border-top-color: white;
-            border-radius: 50%;
             display: none;
-            margin-left: 8px;
-            vertical-align: -3px;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.45);
+            border-top-color: rgba(255, 255, 255, 1);
+            border-radius: 50%;
+            margin-left: 10px;
+            vertical-align: middle;
             animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .file-name {
-            font-size: 13px;
-            color: var(--muted);
-            margin-top: 12px;
-            margin-bottom: 24px;
-            word-break: break-word;
-            text-align: center;
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .progress {
-            margin-top: 15px;
-            height: 6px;
-            background: #e2e8f0;
-            border-radius: 5px;
+            width: 100%;
+            background: #f1f5f9;
+            border-radius: 10px;
             overflow: hidden;
+            margin-top: 18px;
             display: none;
+            border: 1px solid var(--border);
         }
 
         .progress-bar {
-            height: 100%;
             width: 0%;
+            height: 10px;
             background: var(--accent);
             transition: width 0.3s;
         }
 
         .status {
-            margin-top: 14px;
-            padding: 10px 12px;
-            border-radius: 10px;
-            font-size: 13px;
+            text-align: center;
+            margin-top: 18px;
+            font-weight: bold;
             display: none;
-            text-align: left;
-            line-height: 1.4;
         }
 
-        .status.success {
-            display: block;
-            background: #ecfdf3;
-            color: #166534;
-            border: 1px solid #86efac;
-        }
+        .status.success { color: #16a34a; }
+        .status.error { color: #dc2626; }
 
-        .status.error {
-            display: block;
-            background: #fef2f2;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-        }
-
-        .trust {
+       .trust {
             margin-top: 18px;
             padding-top: 14px;
             border-top: 1px solid var(--border);
@@ -189,6 +194,12 @@
             text-align: center;
             line-height: 1.5;
         }
+
+         .trust strong {
+            color: var(--text);
+        }
+
+        .trust div { margin: 4px 0; }
 
         .related-tools {
             margin-top: 26px;
@@ -236,87 +247,36 @@
             color: var(--muted);
         }
 
-        .trust strong {
-            color: var(--text);
-        }
-
-        .top-nav {
-            margin-bottom: 18px;
-        }
-
-        .home-link {
-            display: inline-block;
-            text-decoration: none;
-            color: var(--accent);
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .home-link:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 16px;
-            }
-
-            .container {
-                padding: 22px;
-                border-radius: 14px;
-            }
-
-            .drop-zone {
-                padding: 28px 12px;
-                min-height: 120px;
-                margin-bottom: 24px;
-            }
-
-            select, button, input[type="number"] {
-                font-size: 15px;
-                padding: 13px;
-            }
-
-            .input-grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 720px) {
+            body { padding: 16px; }
+            .container { padding: 22px; border-radius: 14px; }
+            .drop-zone { padding: 28px 12px; min-height: 120px; margin-bottom: 18px; }
+            select, button { font-size: 15px; padding: 13px; }
+            .tool-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-
 <body>
 
 <div class="container">
     <div class="top-nav">
         <a href="/" class="home-link">← Back to home</a>
     </div>
-    <h1>Convert JPG to PNG Online</h1>
-    <p>Convert images to WebP/JPG/PNG and resize images with a privacy-first, no-nonsense workflow.</p>
+    <h1>Compress Videos</h1>
+    <p>Fast, high-quality, full-length MP4 export optimized for texting/messaging (SMS/MMS friendly).</p>
 
     <form id="form">
         <label class="drop-zone" id="drop-zone">
-            Click or Drag & Drop your Image Here
-            <input type="file" name="file" id="file-input" required
-                   accept=".png,.jpg,.jpeg,.webp">
+            Click to select file or Drag & Drop your Video Here
+            <input type="file" name="file" id="file-input" required accept="video/*">
         </label>
 
         <div class="file-name" id="file-name">No file selected</div>
 
-        <select name="format">
-            <option value="jpg">JPG</option>
-            <option value="png">PNG</option>
-            <option value="webp">WEBP</option>
-        </select>
-
-        <div class="input-grid">
-            <input type="number" name="width" min="1" placeholder="Width (px)">
-            <input type="number" name="height" min="1" placeholder="Height (px)">
-            <input type="number" name="quality" min="1" max="100" value="85" placeholder="Quality 1-100">
-        </div>
-        <div class="hint">Leave width or height blank to keep aspect ratio. Default quality is 85.</div>
+        <div class="hint">Uses H.264 + AAC and preserves the full length. Optimized for speed and broad compatibility.</div>
 
         <button type="submit" id="submit-btn">
-            Convert
+            Compress
             <span class="spinner" id="spinner"></span>
         </button>
     </form>
@@ -328,25 +288,25 @@
     <div class="status" id="status"></div>
 
     <div class="trust">
-        <div><strong>Privacy:</strong> Files are processed on this server and removed after conversion.</div>
-        <div><strong>Safety:</strong> Only image files are accepted, max 25MB per file.</div>
-        <div><strong>Supported:</strong> JPG, PNG, WEBP with optional resizing and quality control.</div>
+        <div><strong>Privacy:</strong> Files are processed on this server and removed after compression.</div>
+        <div><strong>Safety:</strong> Video files only, max 1GB per upload.</div>
+        <div><strong>Supported:</strong> MP4, MOV, M4V, WEBM, MKV, AVI.</div>
     </div>
 
     <div class="related-tools">
         <h2>Related tools</h2>
         <div class="tool-grid">
+            <a class="tool-card" href="/jpeg-to-png">
+                <div class="title">Image Converter</div>
+                <div class="desc">Convert and resize images fast.</div>
+            </a>
             <a class="tool-card" href="/pdf-compressor">
                 <div class="title">PDF Compressor</div>
                 <div class="desc">Shrink PDFs with a quick upload.</div>
             </a>
-            <a class="tool-card" href="/video-compressor">
-                <div class="title">Video Compressor</div>
-                <div class="desc">Compress videos for texting (MMS).</div>
-            </a>
             <a class="tool-card" href="/word-counter">
                 <div class="title">Word Counter</div>
-                <div class="desc">Instant word and character counts.</div>
+                <div class="desc">Count words, chars, and sentences.</div>
             </a>
         </div>
     </div>
@@ -377,8 +337,6 @@ fileInput.addEventListener("change", () => {
     fileName.textContent = fileInput.files[0]?.name || "No file selected";
 });
 
-
-// Drag & drop
 dropZone.addEventListener("dragover", (e) => {
     e.preventDefault();
     dropZone.style.borderColor = "#3b82f6";
@@ -393,7 +351,12 @@ dropZone.addEventListener("drop", (e) => {
 document.getElementById("form").onsubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
+    if (!fileInput.files?.length) {
+        statusEl.textContent = "Please choose a video file.";
+        statusEl.className = "status error";
+        statusEl.style.display = "block";
+        return;
+    }
 
     statusEl.className = "status";
     statusEl.textContent = "";
@@ -405,44 +368,65 @@ document.getElementById("form").onsubmit = async (e) => {
     progress.style.display = "block";
     progressBar.style.width = "30%";
     try {
-        const response = await fetch("/convert", {
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+        formData.append("mode", "message");
+
+        statusEl.textContent = "Uploading...";
+        statusEl.className = "status";
+        statusEl.style.display = "block";
+
+        const response = await fetch("/compress-video/job", {
             method: "POST",
             body: formData
         });
 
-        progressBar.style.width = "80%";
-
         if (!response.ok) {
-            let message = "Conversion failed.";
+            let message = "Compression failed.";
             try {
                 const data = await response.json();
-                if (data?.error) {
-                    message = data.error;
-                }
-            } catch (_) {
-                // ignore parse errors
-            }
+                if (data?.error) message = data.error;
+            } catch (_) {}
             throw new Error(message);
         }
 
-        const blob = await response.blob();
+        const data = await response.json();
+        const jobId = data?.job_id;
+        if (!jobId) throw new Error("Server did not return a job id.");
 
-        progressBar.style.width = "100%";
+        progressBar.style.width = "80%";
+        statusEl.textContent = "Processing...";
 
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        const format = (formData.get("format") || "file").toString();
-        a.download = `converted.${format}`;
-        a.click();
+        const startedAt = Date.now();
+        while (true) {
+            const st = await fetch(`/compress-video/job/${jobId}`, { method: "GET" });
+            if (!st.ok) throw new Error("Could not fetch job status.");
+            const stData = await st.json();
+            const status = stData?.status;
 
-        statusEl.textContent = "Conversion complete. Your file is downloading.";
-        statusEl.className = "status success";
+            const seconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
+            statusEl.textContent = status === "processing" ? `Processing... (${seconds}s)` : "Queued...";
+
+            if (status === "done" && stData?.download_url) {
+                progressBar.style.width = "100%";
+                window.location.href = stData.download_url;
+                statusEl.textContent = "Compression complete. Your video is downloading.";
+                statusEl.className = "status success";
+                break;
+            }
+
+            if (status === "error") {
+                throw new Error(stData?.error || "Compression failed.");
+            }
+
+            await new Promise((r) => setTimeout(r, 1200));
+        }
 
     } catch (err) {
-        const message = err instanceof Error ? err.message : "Conversion failed.";
-        statusEl.textContent = message || "Conversion failed.";
+        const message = err instanceof Error ? err.message : "Compression failed.";
+        statusEl.textContent = message || "Compression failed.";
         statusEl.className = "status error";
+        statusEl.style.display = "block";
     } finally {
         setTimeout(() => {
             progressBar.style.width = "0%";
@@ -454,6 +438,5 @@ document.getElementById("form").onsubmit = async (e) => {
     }
 };
 </script>
-
 </body>
 </html>

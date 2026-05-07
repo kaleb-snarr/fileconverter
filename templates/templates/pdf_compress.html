@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Free PDF Compressor Online – Reduce PDF Size | snarrtools</title>
+    <title>Fast PDF Compressor Online – Reduce PDF Size | snarrtools</title>
     <meta name="description" content="Compress PDF files quickly with a privacy-first workflow. Reduce size without leaving the browser.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index,follow">
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
     <link rel="icon" type="image/png" href="/snarrtoolsfavicon.png">
 
     <style>
+
         :root {
             --bg: #f5f7fb;
             --panel: #ffffff;
@@ -199,7 +202,7 @@
             color: var(--muted);
             text-align: center;
         }
-
+        
         .top-nav {
             margin-bottom: 18px;
         }
@@ -285,13 +288,14 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
     <div class="top-nav">
         <a href="/" class="home-link">← Back to home</a>
     </div>
-    <h1>Compress PDF Files for Free</h1>
+    <h1>Compress PDF Files</h1>
     <p>Reduce PDF size with a privacy-first, no-nonsense workflow.</p>
 
     <form id="form">
@@ -334,6 +338,10 @@
                 <div class="title">Image Converter</div>
                 <div class="desc">Convert and resize images fast.</div>
             </a>
+            <a class="tool-card" href="/video-compressor">
+                <div class="title">Video Compressor</div>
+                <div class="desc">Compress videos for texting (MMS).</div>
+            </a>
             <a class="tool-card" href="/word-counter">
                 <div class="title">Word Counter</div>
                 <div class="desc">Count words, chars, and sentences.</div>
@@ -352,6 +360,17 @@ const statusEl = document.getElementById("status");
 const submitBtn = document.getElementById("submit-btn");
 const spinner = document.getElementById("spinner");
 
+function setDroppedFiles(files) {
+    if (!files || files.length === 0) return;
+    try {
+        const dt = new DataTransfer();
+        for (const file of files) dt.items.add(file);
+        fileInput.files = dt.files;
+    } catch (_) {
+        // Some browsers disallow programmatically setting input.files.
+    }
+}
+
 fileInput.addEventListener("change", () => {
     fileName.textContent = fileInput.files[0]?.name || "No file selected";
 });
@@ -364,8 +383,8 @@ dropZone.addEventListener("dragover", (e) => {
 
 dropZone.addEventListener("drop", (e) => {
     e.preventDefault();
-    fileInput.files = e.dataTransfer.files;
-    fileName.textContent = fileInput.files[0]?.name;
+    setDroppedFiles(e.dataTransfer.files);
+    fileName.textContent = e.dataTransfer.files[0]?.name || "No file selected";
 });
 
 document.getElementById("form").onsubmit = async (e) => {
@@ -382,7 +401,6 @@ document.getElementById("form").onsubmit = async (e) => {
 
     progress.style.display = "block";
     progressBar.style.width = "30%";
-
     try {
         const response = await fetch("/compress", {
             method: "POST",
@@ -416,6 +434,11 @@ document.getElementById("form").onsubmit = async (e) => {
 
         statusEl.textContent = "Compression complete. Your file is downloading.";
         statusEl.className = "status success";
+
+    } catch (err) {
+        const message = err instanceof Error ? err.message : "Compression failed.";
+        statusEl.textContent = message || "Compression failed.";
+        statusEl.className = "status error";
     } finally {
         setTimeout(() => {
             progressBar.style.width = "0%";
@@ -424,6 +447,7 @@ document.getElementById("form").onsubmit = async (e) => {
 
         submitBtn.disabled = false;
         spinner.style.display = "none";
+
     }
 };
 </script>
